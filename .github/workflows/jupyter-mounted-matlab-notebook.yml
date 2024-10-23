@@ -1,6 +1,6 @@
 # Copyright 2024 The MathWorks, Inc.
-# Build & Publish jupyter-matlab-notebook
-name: jupyter-matlab-notebook
+# Build & Publish jupyter-mounted-matlab-notebook
+name: jupyter-mounted-matlab-notebook
 
 # Define when builds will occur:
 on:
