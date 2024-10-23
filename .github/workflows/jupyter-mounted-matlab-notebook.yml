@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        matlab_release_tag: [R2024B, R2024A, R2023B]
+        matlab_release_tag: [R2024B, R2024A, R2023B, R2023A, R2022B]
     uses: ./.github/workflows/build-and-publish-docker-image.yml
     secrets: inherit
     with:
