@@ -31,6 +31,10 @@ on:
         description: 'If true, then an additional tag without OS information is generated.'
         required: true
         type: boolean
+      build_args:
+        description: 'Space separated list of build-args to pass.'
+        required: false
+        type: string
 
 jobs:
   build-push-image:
@@ -78,7 +82,7 @@ jobs:
           tags: |
             ${{ inputs.base_image_name }}:${{ steps.setup_image_tags.outputs.TAG_RELEASE_AND_OS_CAMEL_CASE }}
             ${{ inputs.base_image_name }}:${{ steps.setup_image_tags.outputs.TAG_RELEASE_AND_OS_PASCAL_CASE }}
-          build-args: MATLAB_RELEASE=${{ inputs.matlab_release_tag }}
+          build-args: MATLAB_RELEASE=${{ inputs.matlab_release_tag }} ${{ inputs.build_args }}
 
       # Example tags: r2023a-ubuntu20.04, R2023a-ubuntu20.04, r2023a, R2023a
       - name: Build & Push Image for latest OS
@@ -93,6 +97,6 @@ jobs:
             ${{ inputs.base_image_name }}:${{ steps.setup_image_tags.outputs.TAG_RELEASE_ONLY_PASCAL_CASE }}
             ${{ inputs.base_image_name }}:${{ steps.setup_image_tags.outputs.TAG_RELEASE_AND_OS_CAMEL_CASE }}
             ${{ inputs.base_image_name }}:${{ steps.setup_image_tags.outputs.TAG_RELEASE_AND_OS_PASCAL_CASE }}
-          build-args: MATLAB_RELEASE=${{ inputs.matlab_release_tag }}
+          build-args: MATLAB_RELEASE=${{ inputs.matlab_release_tag }} ${{ inputs.build_args }}
 
 
