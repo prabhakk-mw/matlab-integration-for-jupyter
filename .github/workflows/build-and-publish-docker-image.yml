@@ -97,6 +97,10 @@ jobs:
             ${{ inputs.base_image_name }}:${{ steps.setup_image_tags.outputs.TAG_RELEASE_ONLY_PASCAL_CASE }}
             ${{ inputs.base_image_name }}:${{ steps.setup_image_tags.outputs.TAG_RELEASE_AND_OS_CAMEL_CASE }}
             ${{ inputs.base_image_name }}:${{ steps.setup_image_tags.outputs.TAG_RELEASE_AND_OS_PASCAL_CASE }}
-          build-args: MATLAB_RELEASE=${{ inputs.matlab_release_tag }}${{ inputs.build_args }}
+          build-args: |
+            MATLAB_RELEASE=${{ inputs.matlab_release_tag }}
+            INSTALL_MATLABENGINE=1
+            INSTALL_VNC=1
+            ${{ inputs.build_args }}
 
 
