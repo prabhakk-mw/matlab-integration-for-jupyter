@@ -149,11 +149,14 @@ RUN echo "MATLAB Installation Complete."
 
 #####################################################
 #  Stage 3 : Install MATLAB Engine for Python
+#  IMPORTANT: Failure to install does not stop the build
 #####################################################
 FROM base2 AS base2-with-engine
 ARG MATLAB_INSTALL_LOCATION
 RUN echo "Installing MATLAB Engine for Python..."
-RUN MATLAB_VERSION=$(cat ${MATLAB_INSTALL_LOCATION}/VersionInfo.xml | grep -oP '(\d{2}\.\d{1})') && env LD_LIBRARY_PATH=${MATLAB_INSTALL_LOCATION}/bin/glnxa64 python -m pip install -U matlabengine==${MATLAB_VERSION}.*
+RUN MATLAB_VERSION=$(cat ${MATLAB_INSTALL_LOCATION}/VersionInfo.xml | grep -oP '(\d{2}\.\d{1})') && \
+     env LD_LIBRARY_PATH=${MATLAB_INSTALL_LOCATION}/bin/glnxa64 python -m pip install -U matlabengine==${MATLAB_VERSION}.* || \
+     true
 
 # PICK image with/without engine
 FROM base2${MEFP} AS base3
