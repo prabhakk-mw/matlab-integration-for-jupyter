@@ -3,7 +3,7 @@
 
 The Dockerfile in this repository can be used to build a Jupyter Image with the MATLAB Integration for Jupyter.
 
-The images produced are based on `jupyter/base-notebook:ubuntu-22.04` which ships with Python 3.11
+The images produced are based on `jupyter/base-notebook:ubuntu-22.04` which ships with `Python 3.11`.
 
 ## Build Instructions
 
@@ -26,16 +26,16 @@ Run the container.
 docker run -it -p 8888:8888 --rm mifj:R2024b
 ```
 
-Visiting `http://<hostname>:8888/?token=<token>` printed on the console into a browser loads JupyterLab, where:
+Visiting `http://<hostname>:8888/?token=<token>`, printed on the console, in a browser loads JupyterLab, where:
 
 The hostname is the name of the computer running Docker.
 The token is the secret token printed in the console.
 
-See here for more information about [running Jupyter Images](https://jupyter-docker-stacks.readthedocs.io/en/latest/index.html#quick-start).
+For more information on running jupyter images, see [Jupyter Quick Start](https://jupyter-docker-stacks.readthedocs.io/en/latest/index.html#quick-start).
 
 ## Customize the Image
 
-By default, the [Dockerfile](https://github.com/mathworks-ref-arch/matlab-integration-for-jupyter/blob/main/Dockerfile) installs MATLAB for the latest available MATLAB release without any additional toolboxes or products into the `/opt/matlab` folder, along with the Python packages [jupyter-matlab-proxy](https://github.com/mathworks/jupyter-matlab-proxy),  [jupyter-matlab-vnc-proxy](https://github.com/mathworks/jupyter-matlab-vnc-proxy)*(Optional)*, that provide the MATLAB Integration for Jupyter.
+By default, the [Dockerfile](https://github.com/mathworks-ref-arch/matlab-integration-for-jupyter/blob/main/Dockerfile) installs MATLAB for the latest available MATLAB release without any additional toolboxes or products into the `/opt/matlab` folder, along with the Python package [jupyter-matlab-proxy](https://github.com/mathworks/jupyter-matlab-proxy) that provides the MATLAB Integration for Jupyter.
 
 Use the options below to customize your build.
 
@@ -49,7 +49,7 @@ The [Dockerfile](https://github.com/mathworks-ref-arch/matlab-dockerfile/blob/ma
 | [MATLAB_INSTALL_LOCATION](#build-an-image-with-matlab-installed-to-a-specific-location) | The path to install MATLAB. | /opt/matlab |
 | [LICENSE_SERVER](#build-an-image-configured-to-use-a-license-server) | The port and hostname of the machine that is running the Network License Manager, using the port@hostname syntax. For example: *27000@MyServerName* | *Unset* |
 | [INSTALL_MATLABENGINE](#build-an-image-with-the-matlab-engine-for-python) | Set this value to install the MATLAB Engine for Python into the image. | *Unset* |
-| [INSTALL_VNC]() | Set this value to install the [jupyter-matlab-vnc-proxy](https://github.com/mathworks/jupyter-matlab-vnc-proxy). | *Unset* |
+| [INSTALL_VNC](#build-an-image-with-the-matlab-integration-for-jupyter-using-vnc) | Set this value to install the [jupyter-matlab-vnc-proxy](https://github.com/mathworks/jupyter-matlab-vnc-proxy). Use MATLAB Integration for Jupyter using VNC to connect to a traditional MATLAB desktop via VNC.| *Unset* |
 
 
 Use these arguments with the the `docker build` command to customize your image.
@@ -206,7 +206,7 @@ To build on older versions of Ubuntu or Python, update the base image used in th
 
 For example, the [jupyter/docker-stacks *(GitHub)*](https://github.com/jupyter/docker-stacks?tab=readme-ov-file#using-old-images) page lists `4d70cf8da953` as the tag for an image with `Python 3.10` on `Ubuntu 22.04`.
 
-To build and image with this base layer, update this [line](https://github.com/mathworks-ref-arch/matlab-integration-for-jupyter/blob/main/Dockerfile#L64) in the Dockerfile to `FROM quay.io/jupyter/base-notebook:4d70cf8da953`.
+To build and image with this base layer, update this [line](https://github.com/mathworks-ref-arch/matlab-integration-for-jupyter/blob/main/Dockerfile#L66) in the Dockerfile to `FROM quay.io/jupyter/base-notebook:4d70cf8da953`.
 
 This might be useful if your workflow depends on older versions of Python. 
 For example the MATLAB Engine for Python only supports Python 3.11 from R2023b.
@@ -214,7 +214,17 @@ For example the MATLAB Engine for Python only supports Python 3.11 from R2023b.
 MATLAB releases older than R2023b would require an older versions of Python, and you could use the approach above to build an image with the desired python version.
 See [python compatibility for MATLAB Engine for Python](https://mathworks.com/support/requirements/python-compatibility.html) for more information.
 
+### MATLAB Dependencies
+Refer the [MATLAB Dependencies](https://github.com/mathworks-ref-arch/container-images/tree/main/matlab-deps) repository to verify that the release of MATLAB you are installing is supported on the Operating System you choose. 
+For example, R2024b is currently the only MATLAB Release which supports Ubuntu 24.04. 
+
 ## Support & Feedback
 If you encounter a technical issue or have an enhancement request.
 
 Please create an [issue](https://github.com/mathworks-ref-arch/matlab-integration-for-jupyter/issues/new) with the relevant information for us to reproduce and investigate the reported issue.
+
+----
+
+Copyright 2020-2024 The MathWorks, Inc.
+
+----

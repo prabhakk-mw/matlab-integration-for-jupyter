@@ -1,6 +1,6 @@
 # Copyright 2024 The MathWorks, Inc.
 # Dockerfile for the MATLAB Integration for Jupyter based on quay.io/jupyter/base-notebook
-
+# With Python Version : 3.11
 ###############################################################################
 # This Dockerfile is divided into multiple stages, the behavior of each stage
 #         is based on the build time args.
@@ -9,6 +9,8 @@
 #  Stage 3 : Install MATLAB Engine for Python
 #  Stage 4 : Install MATLAB Integration for Jupyter
 #  Stage 5 : Embed LICENSE_SERVER information
+# This Dockerfile is based on the concept explained here.
+# See: https://github.com/docker/cli/issues/1134#issuecomment-405946645
 ###############################################################################
 
 # Example docker build commands are available at the end of this file.
@@ -35,12 +37,12 @@ ARG MATLAB_INSTALL_STAGE_SELECTOR=${MOUNT_MATLAB:+"from-mount"}
 ARG MATLAB_IMAGE_NAME
 # Argument shared across multi-stage build to hold location of installed MATLAB 
 ARG MATLAB_INSTALL_LOCATION_PLACEHOLDER=/tmp/matlab-install-location
-# if image is provided, set a temp value to "from-image"
+# If image is provided, set a temp value to "from-image"
 ARG MATLAB_SOURCE_TEMP=${MATLAB_IMAGE_NAME:+"from-image"}
-# if temp value is set, then set it as source, else carry forward result from mount
+# If temp value is set, then set it as source, else carry forward result from mount
 ARG MATLAB_INSTALL_STAGE_SELECTOR=${MATLAB_SOURCE_TEMP:-${MATLAB_INSTALL_STAGE_SELECTOR}}
 
-# if source is still unset, then use the default 
+# If source is still unset, then use the default 
 ARG MATLAB_INSTALL_STAGE_SELECTOR=${MATLAB_INSTALL_STAGE_SELECTOR:-"using-mpm"}
 
 # Build argument to control the installation of MATLAB Engine for Python
@@ -86,9 +88,9 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt-get update \
 #   Sub-Stage C: Copies MATLAB from existing Image
 #####################################################
 
-######################################
+##########################################
 #  Sub-Stage A: Installs MATLAB using MPM
-######################################
+##########################################
 FROM base1 AS install-matlab-using-mpm
 ARG MATLAB_RELEASE
 ARG MATLAB_PRODUCT_LIST
@@ -147,16 +149,21 @@ USER $NB_USER
 WORKDIR /home/${NB_USER}
 RUN echo "MATLAB Installation Complete."
 
-#####################################################
+##################################################################################################################
 #  Stage 3 : Install MATLAB Engine for Python
-#  IMPORTANT: Failure to install does not stop the build
-#####################################################
+# Installation can fail if :
+# 1. Python Version is incompatible.
+#       For more information, see https://mathworks.com/support/requirements/python-compatibility.html
+# 2. MATLAB installation is not found, which is always true if you are mounting MATLAB at runtime.
+#
+# Failure to install does not stop the build
+##################################################################################################################
 FROM base2 AS base2-with-engine
 ARG MATLAB_INSTALL_LOCATION
 RUN echo "Installing MATLAB Engine for Python..."
 RUN MATLAB_VERSION=$(cat ${MATLAB_INSTALL_LOCATION}/VersionInfo.xml | grep -oP '(\d{2}\.\d{1})') && \
      env LD_LIBRARY_PATH=${MATLAB_INSTALL_LOCATION}/bin/glnxa64 python -m pip install -U matlabengine==${MATLAB_VERSION}.* || \
-     true
+     echo "Failed to install MATLAB Engine for Python... skipping ..."
 
 # PICK image with/without engine
 FROM base2${MEFP} AS base3
