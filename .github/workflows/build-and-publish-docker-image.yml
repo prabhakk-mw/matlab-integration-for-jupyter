@@ -96,7 +96,8 @@ jobs:
         if: ${{ inputs.is_default_os == true }}
         uses: docker/build-push-action@v4
         with:
-          build-args: ${{ steps.build-args-as-list.outputs.stringList }}
+          build-args: |
+            ${{ steps.build-args-as-list.outputs.stringList }}
           context: ${{ inputs.docker_build_context }}
           platforms: linux/amd64
           push: true
