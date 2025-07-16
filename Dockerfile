@@ -1,6 +1,6 @@
-# Copyright 2024 The MathWorks, Inc.
+# Copyright 2024-2025 The MathWorks, Inc.
 # Dockerfile for the MATLAB Integration for Jupyter based on quay.io/jupyter/base-notebook
-# With Python Version : 3.11
+# With Python Version : 3.12
 ###############################################################################
 # This Dockerfile is divided into multiple stages, the behavior of each stage
 #         is based on the build time args.
@@ -16,7 +16,7 @@
 # Example docker build commands are available at the end of this file.
 
 ## Setup Build Arguments, to chain multi-stage build selection.
-ARG MATLAB_RELEASE=R2024b
+ARG MATLAB_RELEASE=R2025a
 
 # See https://mathworks.com/help/install/ug/mpminstall.html for product list specfication
 ARG MATLAB_PRODUCT_LIST="MATLAB"
@@ -58,7 +58,7 @@ ARG LICENSE_SERVER
 ARG NLM=${LICENSE_SERVER:+"-with-nlm"}
 
 # Both 22.04 & 24.04 ship with Python 3.11
-ARG UBUNTU_VERSION=22.04
+ARG UBUNTU_VERSION=24.04
 
 ######################################
 #  Stage 1 : Base Layer + matlab-deps
