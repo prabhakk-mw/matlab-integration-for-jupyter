@@ -16,7 +16,7 @@
 # Example docker build commands are available at the end of this file.
 
 ## Setup Build Arguments, to chain multi-stage build selection.
-ARG MATLAB_RELEASE=R2025a
+ARG MATLAB_RELEASE=R2025b
 
 # See https://mathworks.com/help/install/ug/mpminstall.html for product list specfication
 ARG MATLAB_PRODUCT_LIST="MATLAB"
@@ -49,7 +49,7 @@ ARG MATLAB_INSTALL_STAGE_SELECTOR=${MATLAB_INSTALL_STAGE_SELECTOR:-"using-mpm"}
 ARG INSTALL_MATLABENGINE
 ARG MEFP=${INSTALL_MATLABENGINE:+"-with-engine"}
 
-# Build argument to control the installation of jupyter-matlab-vnc-proxy
+# Build argument to control the installation of jupyter-remote-desktop-proxy
 ARG INSTALL_VNC
 ARG VNC=${INSTALL_VNC:+"-with-vnc"}
 
@@ -72,7 +72,7 @@ USER root
 
 ARG MATLAB_DEPS_URL="https://raw.githubusercontent.com/mathworks-ref-arch/container-images/main/matlab-deps/${MATLAB_RELEASE}/ubuntu${UBUNTU_VERSION}/base-dependencies.txt"
 ARG MATLAB_DEPENDENCIES="matlab-deps-${MATLAB_RELEASE}-base-dependencies.txt"
-ARG ADDITIONAL_PACKAGES="wget curl unzip ca-certificates xvfb git vim"
+ARG ADDITIONAL_PACKAGES="wget curl unzip ca-certificates xvfb git vim fluxbox"
 RUN export DEBIAN_FRONTEND=noninteractive && apt-get update \
     && apt-get install --no-install-recommends -y ${ADDITIONAL_PACKAGES}\
     && wget $(echo ${MATLAB_DEPS_URL} | tr "[:upper:]" "[:lower:]") -O ${MATLAB_DEPENDENCIES} \
@@ -173,12 +173,8 @@ RUN echo "Installing jupyter-matlab-proxy..."
 RUN python -m pip install -U jupyter-matlab-proxy
 
 FROM base3-with-jmp AS base3-with-jmp-with-vnc
-RUN echo "Installing jupyter-matlab-vnc-proxy ..."
+RUN echo "Installing jupyter-remote-desktop-proxy ..."
 USER root
-
-# noVNC provides VNC over browser capability
-# Set default install location for noVNC
-ARG NOVNC_PATH=/opt/noVNC
 
 RUN export DEBIAN_FRONTEND=noninteractive && apt-get update \
     && apt-get install --no-install-recommends -y \
@@ -190,36 +186,24 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt-get update \
     xfce4-settings \
     xorg \
     xubuntu-icon-theme \
-    xscreensaver \
-    && apt-get remove -y gnome-screensaver  \
-    && apt-get clean \
-    && apt-get -y autoremove \
-    && rm -rf /var/lib/apt/lists/* \
-    && curl -sSfL 'https://sourceforge.net/projects/tigervnc/files/stable/1.10.1/tigervnc-1.10.1.x86_64.tar.gz/download' \
-    | tar -zxf - -C /usr/local --strip=2 \
-    && mkdir -p ${NOVNC_PATH} \
-    && curl -sSfL 'https://github.com/novnc/noVNC/archive/v1.2.0.tar.gz' \
-    | tar -zxf - -C ${NOVNC_PATH} --strip=1 \
-    && chown -R ${NB_USER}:users ${NOVNC_PATH}
+    tigervnc-standalone-server \
+    # Disable the automatic screenlock since the account password is unknown
+    && apt-get -y -qq remove xfce4-screensaver 
 
-# JOVYAN is the default user in jupyter/base-notebook.
-# JOVYAN is being set to be passwordless. 
-# This allows users to easily wake the desktop when it goes to sleep.
-RUN passwd $NB_USER -d
-# Get websockify
-RUN conda install -y -q websockify=0.12.0
 # Pip install the latest version of the integration
 USER $NB_USER
-RUN curl -s https://api.github.com/repos/mathworks/jupyter-matlab-vnc-proxy/releases/latest | grep tarball_url | cut -d '"' -f 4 | xargs python -m pip install
+
+COPY --chown=$NB_UID:$NB_GID ./resources /home/${NB_USER}/matlab-resources
 # Move MATLAB resource files to the expected locations
-RUN export RESOURCES_LOC=$(python -c "import jupyter_matlab_vnc_proxy as pkg; print(pkg.__path__[0])")/resources \
+RUN python -m pip install -U jupyter-remote-desktop-proxy \
+    && export RESOURCES_LOC=/home/${NB_USER}/matlab-resources \
     && mkdir -p ${HOME}/.local/share/applications ${HOME}/Desktop ${HOME}/.local/share/ ${HOME}/.icons \
     && cp ${RESOURCES_LOC}/MATLAB.desktop ${HOME}/Desktop/ \
     && cp ${RESOURCES_LOC}/MATLAB.desktop ${HOME}/.local/share/applications\
     && ln -s ${RESOURCES_LOC}/matlab_icon.png ${HOME}/.icons/matlab_icon.png \
-    && cp ${RESOURCES_LOC}/matlab_launcher.py ${HOME}/.local/share/ \
-    && cp ${RESOURCES_LOC}/mw_lite.html ${NOVNC_PATH} \
-    && touch ${HOME}/.Xauthority
+    && cp ${RESOURCES_LOC}/matlab_launcher.py ${HOME}/.local/share/ 
+
+RUN echo "python -m pip list"
 
 FROM base3-with-jmp${VNC} AS base4
 RUN echo "Python Package Installation Complete."

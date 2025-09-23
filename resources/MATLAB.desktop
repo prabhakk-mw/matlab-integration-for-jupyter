@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=MATLAB
+Exec=bash -c "python3 $HOME/.local/share/matlab_launcher.py"
+Icon=matlab_icon.png
+Terminal=false
+StartupNotify=true
+Categories=Development
