@@ -11,7 +11,7 @@
     */
     "name": "MATLAB Integration for Jupyter",
     "build": {
-        "dockerfile": "../Dockerfile",
+        "dockerfile": "Dockerfile",
         "args": {
             "MATLAB_RELEASE": "r2025b",
             "MATLAB_PRODUCT_LIST": "MATLAB Symbolic_Math_Toolbox Simulink"
