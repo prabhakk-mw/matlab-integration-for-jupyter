@@ -1,23 +1,6 @@
 {
-    /* This DevContainer configuration demonstrates
-        1. Building image from Dockerfile from mathworks-ref-arch/matlab-dockerfile
-        2. Installation of MATLAB Integration for Jupyter & JupyterLab  
-        3. Configuration of VSCode environment for following modes of access:
-            a. MATLAB in a Browser
-            b. Directly from VSCode, using the MATLAB extension for VSCode
-            c. Using Jupyter Notebooks in VSCode
-            d. Start Codespace in Jupyter
-    See: https://github.com/mathworks-ref-arch/matlab-integration-for-jupyter
-    */
-    "name": "MATLAB Integration for Jupyter",
-    "build": {
-        "dockerfile": "../Dockerfile",
-        "args": {
-            "MATLAB_RELEASE": "r2025b",
-            "MATLAB_PRODUCT_LIST": "MATLAB Symbolic_Math_Toolbox Simulink",
-            "MATLAB_INSTALL_STAGE_SELECTOR": "using-mpm"
-        }
-    },
+    "name": "MATLAB R2025b",
+    "image": "ghcr.io/prabhakk-mw/matlab-integration-for-jupyter/jupyter-matlab-notebook:r2025b",
     // Configure VSCode Extensions
     "customizations": {
         "vscode": {
