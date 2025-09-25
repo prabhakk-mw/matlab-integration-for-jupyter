@@ -4,6 +4,6 @@ Type=Application
 Name=MATLAB
 Exec=/bin/sh -lc 'matlab -licmode $([ -n "${MLM_LICENSE_FILE}" ] && echo "file" || echo "online")'
 Icon=matlab_icon.png
-Terminal=false
+Terminal=true
 StartupNotify=true
 Categories=Development
