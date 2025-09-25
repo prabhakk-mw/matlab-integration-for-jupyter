@@ -14,7 +14,9 @@ Just click the button above to launch a new Codespace with MATLAB and Jupyter re
 ### Important: Using Codespaces with JupyterLab
 To view the codespace with JupyterLab you will need to specifically select the JupyterLab editor when your codespace launches.
 
-![Open in JupyterLab](./resources/open-in-jupyterlab.png)
+<p align="left">
+    <img src="./resources/open-in-jupyterlab.png" alt="Open in JupyterLab" style="border: 1px solid black; width: 50%;">
+</p>
 
 See [Setting your default editor (GitHub Docs*)](https://docs.github.com/en/enterprise-cloud@latest/codespaces/setting-your-user-preferences/setting-your-default-editor-for-github-codespaces#setting-your-default-editor) to set JupyterLab as your preferred editor, enabling single click access to codespaces via JupyterLab.
 
