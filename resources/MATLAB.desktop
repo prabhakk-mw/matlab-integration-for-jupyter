@@ -2,7 +2,7 @@
 Version=1.0
 Type=Application
 Name=MATLAB
-Exec=bash -c "python3 $HOME/.local/share/matlab_launcher.py"
+Exec=/bin/sh -lc 'matlab -licmode $([ -n "${MLM_LICENSE_FILE}" ] && echo "file" || echo "online")'
 Icon=matlab_icon.png
 Terminal=false
 StartupNotify=true
