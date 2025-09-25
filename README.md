@@ -5,11 +5,19 @@ To run MATLAB&reg; in Jupyter&reg; inside a container, use the Dockerfile in thi
 
 ## Try it in GitHub Codespaces
 
-You can quickly try MATLAB in Jupyter without any local setup by using GitHub Codespaces. This will create a cloud-based development environment with the latest pre-built image from this repository.
+You can quickly try the MATLAB integration for Jupyter without any local setup by using GitHub Codespaces. This will create a cloud-based development environment with the latest pre-built image from this repository.
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/prabhakk-mw/matlab-integration-for-jupyter?devcontainer_path=.devcontainer%2Fusing-prebuilt%2Fdevcontainer.json)
 
 Just click the button above to launch a new Codespace with MATLAB and Jupyter ready to use. The environment will be pre-configured with the latest available MATLAB release.
+
+### Important: Using Codespaces with JupyterLab
+To view the codespace with JupyterLab you will need to specifically select the JupyterLab editor when your codespace launches.
+
+![Open in JupyterLab](./resources/open-in-jupyterlab.png)
+
+See [Setting your default editor (GitHub Docs*)](https://docs.github.com/en/enterprise-cloud@latest/codespaces/setting-your-user-preferences/setting-your-default-editor-for-github-codespaces#setting-your-default-editor) to set JupyterLab as your preferred editor, enabling single click access to codespaces via JupyterLab.
+
 
 ## Build Instructions
 
