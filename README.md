@@ -11,11 +11,10 @@ You can quickly try the MATLAB integration for Jupyter without any local setup b
 
 Just click the button above to launch a new Codespace with MATLAB and Jupyter ready to use. The environment will be pre-configured with the latest available MATLAB release.
 
-### Important: Using Codespaces with JupyterLab
-To view the codespace with JupyterLab you will need to specifically select the JupyterLab editor when your codespace launches.
+Once your codespace is ready, click on the Open in JupyterLab option shown below.
 
 <p align="left">
-    <img src="./resources/open-in-jupyterlab.png" alt="Open in JupyterLab" style="border: 1px solid black; width: 50%;">
+    <img src="./resources/open-in-jupyterlab.png" alt="Open in JupyterLab" style="width: 75%;">
 </p>
 
 See [Setting your default editor (GitHub Docs*)](https://docs.github.com/en/enterprise-cloud@latest/codespaces/setting-your-user-preferences/setting-your-default-editor-for-github-codespaces#setting-your-default-editor) to set JupyterLab as your preferred editor, enabling single click access to codespaces via JupyterLab.
