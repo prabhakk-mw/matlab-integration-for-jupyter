@@ -1,0 +1,24 @@
+{
+    "name": "Prebuilt GHCR Image for MATLAB Integration for Jupyter",
+    "image": "ghcr.io/prabhakk-mw/matlab-integration-for-jupyter/jupyter-matlab-notebook:r2025b",
+    // Configure VSCode Extensions
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "MathWorks.language-matlab",
+                "ms-toolsai.jupyter",
+                "ms-python.python"
+            ],
+            "settings": {
+                "MATLAB.signIn": true,
+                // Marks MATLAB Kernel as a trusted source
+                "jupyter.kernels.trusted": [
+                    "/opt/conda/share/jupyter/kernels/jupyter_matlab_kernel/kernel.json"
+                ]
+            }
+        }
+    },
+    "hostRequirements": {
+        "cpus": 4
+    }
+}
