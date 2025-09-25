@@ -213,10 +213,7 @@ RUN python -m pip install -U jupyter-remote-desktop-proxy \
     && mkdir -p ${HOME}/.local/share/applications ${HOME}/Desktop ${HOME}/.local/share/ ${HOME}/.icons \
     && cp ${RESOURCES_LOC}/MATLAB.desktop ${HOME}/Desktop/ \
     && cp ${RESOURCES_LOC}/MATLAB.desktop ${HOME}/.local/share/applications\
-    && ln -s ${RESOURCES_LOC}/matlab_icon.png ${HOME}/.icons/matlab_icon.png \
-    && cp ${RESOURCES_LOC}/matlab_launcher.py ${HOME}/.local/share/ 
-
-RUN echo "python -m pip list"
+    && ln -s ${RESOURCES_LOC}/matlab_icon.png ${HOME}/.icons/matlab_icon.png
 
 FROM base3-with-jmp${VNC} AS base4
 RUN echo "Python Package Installation Complete."
