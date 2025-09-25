@@ -117,6 +117,7 @@ RUN wget -q https://www.mathworks.com/mpm/glnxa64/mpm && \
     && cd / && rm -rf /matlab-install ${MSH_DOWNLOAD_LOCATION}
 
 ENV MATHWORKS_SERVICE_HOST_MANAGED_INSTALL_ROOT=${MSH_MANAGED_INSTALL_ROOT}
+WORKDIR /root
 
 ######################################
 #  Sub-Stage B: Uses Mounted MATLAB

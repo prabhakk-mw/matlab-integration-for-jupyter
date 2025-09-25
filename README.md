@@ -3,6 +3,14 @@
 
 To run MATLAB&reg; in Jupyter&reg; inside a container, use the Dockerfile in this repository. The Dockerfile builds an image with [MATLAB Integration for Jupyter](https://github.com/mathworks/jupyter-matlab-proxy) (GitHub), based on a `jupyter/base-notebook:ubuntu-24.04` base image from [Jupyter Docker Stacks](https://github.com/jupyter/docker-stacks) (GitHub), which ships with Python 3.13. 
 
+## Try it in GitHub Codespaces
+
+You can quickly try MATLAB in Jupyter without any local setup by using GitHub Codespaces. This will create a cloud-based development environment with the latest pre-built image from this repository.
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/prabhakk-mw/matlab-integration-for-jupyter?devcontainer_path=.devcontainer%2Fusing-prebuilt%2Fdevcontainer.json)
+
+Just click the button above to launch a new Codespace with MATLAB and Jupyter ready to use. The environment will be pre-configured with the latest available MATLAB release.
+
 ## Build Instructions
 
 ### Get Sources
