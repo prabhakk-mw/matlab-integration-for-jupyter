@@ -6,6 +6,7 @@
 #         is based on the build time args.
 #  Stage 1 : Base Layer + matlab-deps (release & OS specific)
 #  Stage 2 : Install MATLAB (Either from MPM, mounted, or your own image)
+#  Stage 2a : MathWorks Service Host (MSH) is installed if MATLAB is installed using MPM
 #  Stage 3 : Install MATLAB Engine for Python
 #  Stage 4 : Install MATLAB Integration for Jupyter
 #  Stage 5 : Embed LICENSE_SERVER information
@@ -72,7 +73,7 @@ USER root
 
 ARG MATLAB_DEPS_URL="https://raw.githubusercontent.com/mathworks-ref-arch/container-images/main/matlab-deps/${MATLAB_RELEASE}/ubuntu${UBUNTU_VERSION}/base-dependencies.txt"
 ARG MATLAB_DEPENDENCIES="matlab-deps-${MATLAB_RELEASE}-base-dependencies.txt"
-ARG ADDITIONAL_PACKAGES="wget curl unzip ca-certificates xvfb git vim fluxbox"
+ARG ADDITIONAL_PACKAGES="wget curl unzip ca-certificates xvfb git vim fluxbox gettext"
 RUN export DEBIAN_FRONTEND=noninteractive && apt-get update \
     && apt-get install --no-install-recommends -y ${ADDITIONAL_PACKAGES}\
     && wget $(echo ${MATLAB_DEPS_URL} | tr "[:upper:]" "[:lower:]") -O ${MATLAB_DEPENDENCIES} \
@@ -89,13 +90,16 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt-get update \
 #####################################################
 
 ##########################################
-#  Sub-Stage A: Installs MATLAB using MPM
+#  Sub-Stage A: Installs MATLAB using MPM and includes MSH
 ##########################################
 FROM base1 AS install-matlab-using-mpm
 ARG MATLAB_RELEASE
 ARG MATLAB_PRODUCT_LIST
 ARG MATLAB_INSTALL_LOCATION
 
+WORKDIR /matlab-install
+ARG MSH_MANAGED_INSTALL_ROOT=/usr/local/MathWorks/ServiceHost/
+ARG MSH_DOWNLOAD_LOCATION=/tmp/Downloads/MathWorks/ServiceHost
 # Dont need to set HOME to install Support packages as jupyter images set HOME to NB_USER in all images, even for ROOT.
 RUN echo "Installing MATLAB using MPM..."
 RUN wget -q https://www.mathworks.com/mpm/glnxa64/mpm && \ 
@@ -104,7 +108,15 @@ RUN wget -q https://www.mathworks.com/mpm/glnxa64/mpm && \
     --products ${MATLAB_PRODUCT_LIST} \
     || (echo "MPM Installation Failure. See below for more information:" && cat /tmp/mathworks_root.log && false)\
     && rm -f mpm /tmp/mathworks_root.log \
-    && ln -s ${MATLAB_INSTALL_LOCATION}/bin/matlab /usr/local/bin/matlab
+    && ln -s ${MATLAB_INSTALL_LOCATION}/bin/matlab /usr/local/bin/matlab \
+    && git clone https://github.com/mathworks-ref-arch/administer-mathworks-service-host.git \
+    && cd /matlab-install/administer-mathworks-service-host/admin-scripts/linux/admin-controlled-installation \
+    && ./download_msh.sh --destination ${MSH_DOWNLOAD_LOCATION} \
+    && ./install_msh.sh --source ${MSH_DOWNLOAD_LOCATION} --destination ${MSH_MANAGED_INSTALL_ROOT} --no-update-environment \
+    && ./cleanup_default_msh_installation_location.sh --for-all-users \
+    && cd / && rm -rf /matlab-install ${MSH_DOWNLOAD_LOCATION}
+
+ENV MATHWORKS_SERVICE_HOST_MANAGED_INSTALL_ROOT=${MSH_MANAGED_INSTALL_ROOT}
 
 ######################################
 #  Sub-Stage B: Uses Mounted MATLAB
