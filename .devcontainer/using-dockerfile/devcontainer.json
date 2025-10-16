@@ -14,8 +14,8 @@
         "dockerfile": "../../Dockerfile",
         "args": {
             "MATLAB_RELEASE": "r2025b",
-            "MATLAB_PRODUCT_LIST": "MATLAB Symbolic_Math_Toolbox Simulink",
-            "MATLAB_INSTALL_STAGE_SELECTOR": "using-mpm"
+            "MATLAB_PRODUCT_LIST": "MATLAB"
+            // "MATLAB_INSTALL_STAGE_SELECTOR": "using-mpm"
         }
     },
     // Configure VSCode Extensions
